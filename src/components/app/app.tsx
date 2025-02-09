@@ -49,7 +49,7 @@ const App = () => {
   }, [dispatch]);
 
   const handleModalClose = () => {
-    navigate(-1);
+    navigate(background?.pathname || '/', { replace: true });
     clearOrder();
   };
 
