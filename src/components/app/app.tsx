@@ -14,13 +14,6 @@ import { OrderInfo } from '../order-info';
 import { IngredientDetails } from '../ingredient-details';
 import '../../index.css';
 import styles from './app.module.css';
-import { useEffect, useCallback } from 'react';
-import { getIngredients } from '../../services/slices/ingredients';
-import { clearSelectedOrder } from '../../services/slices/feeds';
-import { AppHeader } from '@components';
-import { useDispatch } from '../../services/store';
-import { getUser } from '../../services/slices/user';
-import { ProtectedRoute } from '../protected-route';
 import {
   Route,
   Routes,
@@ -28,6 +21,13 @@ import {
   useNavigate,
   useMatch
 } from 'react-router-dom';
+import { useEffect, useCallback } from 'react';
+import { getIngredients } from '../../services/slices/ingredients';
+import { clearSelectedOrder } from '../../services/slices/feeds';
+import { AppHeader } from '@components';
+import { useDispatch } from '../../services/store';
+import { getUser } from '../../services/slices/user';
+import { ProtectedRoute } from '../protected-route';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -176,7 +176,7 @@ const App = () => {
             path='/profile/orders/:number'
             element={
               <Modal
-                title={`#${location.pathname.split('/').slice(3)}`}
+                title={`#${orderNumber && orderNumber.padStart(6, '0')}`}
                 onClose={handleModalClose}
               >
                 <OrderInfo />
