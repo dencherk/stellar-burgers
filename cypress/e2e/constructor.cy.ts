@@ -1,124 +1,117 @@
 import { BASE_URL, testUrl } from '../../src/utils/urlTest';
 
+const SELECTORS = {
+  bunR2D3: 'Флюоресцентная булка R2-D3',
+  bunN200i: 'Краторная булка N-200i',
+  ingredientMeat: 'Мясо бессмертных моллюсков Protostomia',
+  ingredientFish: 'Филе Люминесцентного тетраодонтимформа',
+  ingredientRings: 'Хрустящие минеральные кольца',
+  ingredientCheese: 'Сыр с астероидной плесенью',
+  sauceSpace: 'Соус фирменный Space Sauce',
+  sectionFillings: 'Начинки',
+  sectionSauces: 'Соусы',
+  modal: '[data-cy=modal]',
+  modalClose: '[data-cy=modal-close]',
+  orderButton: 'Оформить заказ',
+};
+
 describe('Перехват запроса на эндпоинт ingredients', () => {
   beforeEach(() => {
-    cy.intercept('GET', `${BASE_URL}/ingredients`, {
-      fixture: 'ingredients'
-    });
+    cy.intercept('GET', `/ingredients`, { fixture: 'ingredients' });
     cy.visit(`${testUrl}`);
   });
+
   describe('Проверка сбора бургера', () => {
-    it('Проверка добавления одного игредиента', () => {
-      cy.contains('li', 'Флюоресцентная булка R2-D3').find('button').click();
-      cy.contains('span', 'Флюоресцентная булка R2-D3').should('exist');
+    it('Проверка добавления одного ингредиента', () => {
+      cy.contains('li', SELECTORS.bunR2D3).find('button').click();
+      cy.contains('span', SELECTORS.bunR2D3).should('exist');
     });
 
     it('Проверка добавления нескольких ингредиентов', () => {
-      cy.contains('li', 'Флюоресцентная булка R2-D3').find('button').click();
+      cy.contains('li', SELECTORS.bunR2D3).find('button').click();
 
-      cy.contains('div', 'Начинки').click();
-      cy.contains('li', 'Филе Люминесцентного тетраодонтимформа')
-        .find('button')
-        .click();
-      cy.contains('li', 'Хрустящие минеральные кольца').find('button').click();
-      cy.contains('li', 'Сыр с астероидной плесенью').find('button').click();
+      cy.contains('div', SELECTORS.sectionFillings).click();
+      cy.contains('li', SELECTORS.ingredientFish).find('button').click();
+      cy.contains('li', SELECTORS.ingredientRings).find('button').click();
+      cy.contains('li', SELECTORS.ingredientCheese).find('button').click();
     });
 
-    it('Проверка смена булки', () => {
-      cy.contains('li', 'Краторная булка N-200i').find('button').click();
-      cy.contains('li', 'Флюоресцентная булка R2-D3').find('button').click();
+    it('Проверка смены булки', () => {
+      cy.contains('li', SELECTORS.bunN200i).find('button').click();
+      cy.contains('li', SELECTORS.bunR2D3).find('button').click();
 
-      cy.contains('span', 'Флюоресцентная булка R2-D3');
-      cy.contains('span', 'Краторная булка N-200i').should('not.exist');
+      cy.contains('span', SELECTORS.bunR2D3);
+      cy.contains('span', SELECTORS.bunN200i).should('not.exist');
     });
   });
 
   describe('Проверка работы модальных окон', () => {
     it('Проверка открытия модального окна ингредиента', () => {
-      cy.contains('li', 'Мясо бессмертных моллюсков Protostomia').click();
+      cy.contains('li', SELECTORS.ingredientMeat).click();
       cy.wait(1000);
 
-      const modal = cy.get(`[data-cy=modal]`);
-      modal.should('exist');
+      cy.get(SELECTORS.modal).should('exist');
+      cy.get(SELECTORS.modalClose).should('exist');
 
-      const close = cy.get(`[data-cy=modal-close]`);
-      close.should('exist');
-
-      modal.contains('h3', 'Детали ингредиента');
-      cy.contains('h3', 'Мясо бессмертных моллюсков Protostomia');
+      cy.get(SELECTORS.modal).contains('h3', 'Детали ингредиента');
+      cy.contains('h3', SELECTORS.ingredientMeat);
     });
 
     it('Проверка закрытия модального окна ингредиентов по клику', () => {
-      cy.contains('li', 'Мясо бессмертных моллюсков Protostomia').click();
+      cy.contains('li', SELECTORS.ingredientMeat).click();
 
-      const modal = cy.get(`[data-cy=modal]`);
-      modal.should('exist');
+      cy.get(SELECTORS.modal).should('exist');
+      cy.get(SELECTORS.modalClose).should('exist');
 
-      const close = cy.get(`[data-cy=modal-close]`);
-      close.should('exist');
+      cy.get(SELECTORS.modal).contains('h3', 'Детали ингредиента');
 
-      modal.contains('h3', 'Детали ингредиента');
-
-      close.click();
-      modal.should('not.exist');
+      cy.get(SELECTORS.modalClose).click();
+      cy.get(SELECTORS.modal).should('not.exist');
     });
 
     it('Проверка закрытия модального окна ингредиентов по клавише esc', () => {
-      cy.contains('li', 'Мясо бессмертных моллюсков Protostomia').click();
+      cy.contains('li', SELECTORS.ingredientMeat).click();
 
-      const modal = cy.get(`[data-cy=modal]`);
-      modal.should('exist');
-
+      cy.get(SELECTORS.modal).should('exist');
       cy.get('body').type('{esc}');
 
-      cy.get(`[data-cy=modal]`).should('not.exist');
+      cy.get(SELECTORS.modal).should('not.exist');
     });
   });
 
   describe('Проверка создания заказа', () => {
     beforeEach(() => {
-      cy.intercept('GET', `${BASE_URL}/auth/user`, {
-        fixture: 'user.json'
-      });
-
-      cy.intercept('POST', `${BASE_URL}/orders`, {
-        fixture: 'order.json'
-      }).as('createOrder');
+      cy.intercept('GET', `api/auth/user`, { fixture: 'user.json' });
+      cy.intercept('POST', `api/orders`, { fixture: 'order.json' }).as('createOrder');
 
       cy.setCookie('token', 'token');
       window.localStorage.setItem('token', 'token');
     });
 
     it('Проверка создания заказа', () => {
-      cy.contains('li', 'Краторная булка N-200i').find('button').click();
+      cy.contains('li', SELECTORS.bunN200i).find('button').click();
 
-      cy.contains('div', 'Начинки').click();
-      cy.contains('li', 'Филе Люминесцентного тетраодонтимформа')
-        .find('button')
-        .click();
-      cy.contains('div', 'Соусы').click();
-      cy.contains('li', 'Соус фирменный Space Sauce').find('button').click();
+      cy.contains('div', SELECTORS.sectionFillings).click();
+      cy.contains('li', SELECTORS.ingredientFish).find('button').click();
+      cy.contains('div', SELECTORS.sectionSauces).click();
+      cy.contains('li', SELECTORS.sauceSpace).find('button').click();
 
-      cy.contains('button', 'Оформить заказ').click();
+      cy.contains('button', SELECTORS.orderButton).click();
       cy.wait('@createOrder');
 
-      const modal = cy.get(`[data-cy=modal]`);
-      modal.should('exist');
-      const close = cy.get(`[data-cy=modal-close]`);
-      close.should('exist');
+      cy.get(SELECTORS.modal).should('exist');
+      cy.get(SELECTORS.modalClose).should('exist');
 
       cy.contains('p', 'идентификатор заказа');
       cy.contains('p', 'Ваш заказ начали готовить');
       cy.contains('h2', '68568').should('exist');
       cy.contains('p', 'Дождитесь готовности на орбитальной станции');
 
-      close.click();
+      cy.get(SELECTORS.modalClose).click();
       cy.contains('p', 'идентификатор заказа').should('not.exist');
       cy.contains('p', 'Ваш заказ начали готовить').should('not.exist');
       cy.contains('h2', '68568').should('not.exist');
-      cy.contains('p', 'Дождитесь готовности на орбитальной станции').should(
-        'not.exist'
-      );
+      cy.contains('p', 'Дождитесь готовности на орбитальной станции').should('not.exist');
     });
 
     afterEach(() => {
