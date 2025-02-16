@@ -71,4 +71,4 @@ export const {
   getIsLoading
 } = slice.selectors;
 export const { clearSelectedOrder } = slice.actions;
-export default slice.reducer;
+export const feedReducer = slice.reducer;

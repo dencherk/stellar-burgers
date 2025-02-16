@@ -2,14 +2,14 @@ import { getOrderByNumberApi, getOrdersApi, orderBurgerApi } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
 
-type TOrdersState = {
+export type TOrdersState = {
   isLoading: boolean;
   orderModalData: TOrder | null;
   orderRequest: boolean;
   data: TOrder[];
 };
 
-const initialState: TOrdersState = {
+export const initialState: TOrdersState = {
   isLoading: false,
   orderModalData: null,
   orderRequest: false,
@@ -116,4 +116,4 @@ export const {
 } = slice.selectors;
 
 export const { resetOrderModalData } = slice.actions;
-export default slice.reducer;
+export const ordersReducer = slice.reducer;
