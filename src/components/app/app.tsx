@@ -49,7 +49,7 @@ const App = () => {
   }, [dispatch]);
 
   const handleModalClose = () => {
-    navigate(-1);
+    navigate(background?.pathname || '/', { replace: true });
     clearOrder();
   };
 
@@ -176,7 +176,7 @@ const App = () => {
             path='/profile/orders/:number'
             element={
               <Modal
-                title={`#${location.pathname.split('/').slice(3)}`}
+                title={`#${orderNumber && orderNumber.padStart(6, '0')}`}
                 onClose={handleModalClose}
               >
                 <OrderInfo />

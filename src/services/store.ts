@@ -6,11 +6,11 @@ import {
   useSelector as selectorHook
 } from 'react-redux';
 
-import ingredientsReducer from './slices/ingredients';
-import builderReducer from './slices/builder';
-import ordersReducer from './slices/orders';
-import feedReducer from './slices/feeds';
-import userReducer from './slices/user';
+import { ingredientsReducer } from './slices/ingredients';
+import { builderReducer } from './slices/builder';
+import { ordersReducer } from './slices/orders';
+import { feedReducer } from './slices/feeds';
+import { userReducer } from './slices/user';
 
 export const rootReducer = combineReducers({
   ingredients: ingredientsReducer,
@@ -20,7 +20,7 @@ export const rootReducer = combineReducers({
   user: userReducer
 });
 
-const store = configureStore({
+export const store = configureStore({
   reducer: rootReducer,
   devTools: process.env.NODE_ENV !== 'production'
 });
