@@ -21,8 +21,8 @@ describe('Проверка slices user', () => {
 
     test('Проверка getUser fulfilled', () => {
       const userPayload = {
-        email: 'hello@yandex.ru',
-        name: 'Valeriia'
+        email: 'cherkasskiydenis@yandex.ru',
+        name: 'Denis'
       };
       const action = {
         type: getUser.fulfilled.type,
@@ -60,8 +60,8 @@ describe('Проверка slices user', () => {
 
     test('Проверка registerUser fulfilled', () => {
       const userPayload: TUser = {
-        email: 'hello@yandex.ru',
-        name: 'Valeriia'
+        email: 'cherkasskiydenis@yandex.ru',
+        name: 'Denis'
       };
       const action = {
         type: registerUser.fulfilled.type,
@@ -95,8 +95,8 @@ describe('Проверка slices user', () => {
 
     test('Проверка authUser fulfilled', () => {
       const userPayload: TUser = {
-        email: 'hello@yandex.ru',
-        name: 'Valeriia'
+        email: 'cherkasskiydenis@yandex.ru',
+        name: 'Denis'
       };
       const action = {
         type: authUser.fulfilled.type,
@@ -130,8 +130,8 @@ describe('Проверка slices user', () => {
 
     test('Проверка logoutUser fulfilled', () => {
       const userPayload: TUser = {
-        email: 'hello@yandex.ru',
-        name: 'Valeriia'
+        email: 'Cherkasskiydenis@yandex.ru',
+        name: 'Denis'
       };
       const action = {
         type: logoutUser.fulfilled.type,
